@@ -1,0 +1,18 @@
+services:
+  backend:
+    build: ./api
+    ports:
+      - "4000:4000"
+    volumes:
+      - ./api:/app
+    environment:
+      - DATABASE_URL=/app/database.sqlite
+    depends_on:
+      - frontend
+
+  frontend:
+    build: ./web
+    ports:
+      - "3000:80"
+    stdin_open: true
+    tty: true
