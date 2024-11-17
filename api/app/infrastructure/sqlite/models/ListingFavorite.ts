@@ -1,5 +1,5 @@
 module.exports = (con,Sequelize) =>{
-    const {STRING,INTEGER} = Sequelize
+    const {INTEGER} = Sequelize
     const ListingFavorite = con.define("listing_favorite",{
         id: {
             type: INTEGER,

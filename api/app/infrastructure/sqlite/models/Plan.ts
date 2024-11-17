@@ -10,7 +10,7 @@ module.exports = (con,Sequelize) =>{
             type:STRING,
             required: true
         },
-        Description:{
+        description:{
             type:STRING,
             required: true,
             Comment: "Description of the plan"

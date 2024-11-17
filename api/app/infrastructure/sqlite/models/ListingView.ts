@@ -1,5 +1,5 @@
 module.exports = (con,Sequelize) =>{
-    const {STRING,INTEGER} = Sequelize
+    const {INTEGER} = Sequelize
     const ListingView = con.define("listing_view",{
         id: {
             type: INTEGER,

@@ -1,3 +1,5 @@
+import { Op } from 'sequelize';
+
 module.exports = (con,Sequelize) =>{
     const {STRING,INTEGER,DATE} = Sequelize
     const User = con.define("user",{
@@ -50,8 +52,16 @@ module.exports = (con,Sequelize) =>{
     // Define the beforeCreate hook to prevent insertion of duplicate records
     User.beforeCreate(async (instance, options) => {
         // Check if a support record with the same email already exists
-        const existingUser = await User.findOne({ where: { email: instance.email } });
-        console.log({existingUser})
+        const existingUser = await User.findOne({
+            where: {
+              [Op.or]: [
+                { email: instance.email },
+                { phone: instance.phone },
+                { username: instance.username }
+              ]
+            }
+        });
+        
         if (existingUser) {
             throw new Error('User with the same email already exists');
         }
