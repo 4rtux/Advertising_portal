@@ -1,19 +1,20 @@
 import { db } from '../models/index';
 
+export type IPlanOptional = Partial<IPlan>;
 export interface IPlan {
-    id?: number;
-    name?: string;
-    description?: string;
-    days?: string;
-    status?: number;
+    id: number;
+    name: string;
+    description: string;
+    days: string;
+    status: number;
 }
 
 export interface IPlanRepository {
-    create(data: IPlan): Promise<IPlan>;
-    update(updateVal: IPlan, search: IPlan): Promise<boolean>;
-    delete(search: IPlan): Promise<boolean>;
+    create(data: IPlanOptional): Promise<IPlan>;
+    update(updateVal: IPlanOptional, search: IPlanOptional): Promise<boolean>;
+    delete(search: IPlanOptional): Promise<boolean>;
     findAll(): Promise<IPlan[]>;
-    findByVal(val:IPlan): Promise<IPlan[]>; 
+    findByVal(val:IPlanOptional): Promise<IPlan[]>; 
 }
 
 export class PlanRepository implements IPlanRepository {
@@ -23,7 +24,7 @@ export class PlanRepository implements IPlanRepository {
         this.Plan = db.Plan
     }
 
-    async create(plan: IPlan): Promise<IPlan> {
+    async create(plan: IPlanOptional): Promise<IPlan> {
         try {
             const newPlan = await this.Plan.create(plan)
             return newPlan.dataValues
@@ -33,7 +34,7 @@ export class PlanRepository implements IPlanRepository {
         }
     }
 
-    async update(updateVal: IPlan, search: IPlan): Promise<boolean> {
+    async update(updateVal: IPlanOptional, search: IPlanOptional): Promise<boolean> {
         try{
             const update = await this.Plan.update(updateVal, { where: search})
             if(update[0] == 0){
@@ -46,7 +47,7 @@ export class PlanRepository implements IPlanRepository {
         }
     }
 
-    async delete(search: IPlan): Promise<boolean> {
+    async delete(search: IPlanOptional): Promise<boolean> {
         try{
             await this.Plan.destroy({where:search})
             return true
@@ -67,7 +68,7 @@ export class PlanRepository implements IPlanRepository {
         }
     }
 
-    async findByVal(search:IPlan): Promise<IPlan[]> {
+    async findByVal(search:IPlanOptional): Promise<IPlan[]> {
         try{
             let plans = await this.Plan.findAll({where:search})
             if(plans){

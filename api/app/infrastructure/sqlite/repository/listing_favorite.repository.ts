@@ -1,17 +1,18 @@
 import { db } from '../models/index';
 
+export type IListingFavoriteOptional = Partial<IListingFavorite>;
 export interface IListingFavorite {
-    id?: number;
-    listing_id?: number;
-    user_id?: number;
+    id: number;
+    listing_id: number;
+    user_id: number;
 }
 
 export interface IListingFavoriteRepository {
-    create(data: IListingFavorite): Promise<IListingFavorite>;
-    update(updateVal: IListingFavorite, search: IListingFavorite): Promise<boolean>;
-    delete(search: IListingFavorite): Promise<boolean>;
+    create(data: IListingFavoriteOptional): Promise<IListingFavorite>;
+    update(updateVal: IListingFavoriteOptional, search: IListingFavoriteOptional): Promise<boolean>;
+    delete(search: IListingFavoriteOptional): Promise<boolean>;
     findAll(): Promise<IListingFavorite[]>;
-    findByVal(val:IListingFavorite): Promise<IListingFavorite[]>; 
+    findByVal(val:IListingFavoriteOptional): Promise<IListingFavorite[]>; 
 }
 
 export class ListingFavoriteRepository implements IListingFavoriteRepository {
@@ -21,7 +22,7 @@ export class ListingFavoriteRepository implements IListingFavoriteRepository {
         this.ListingFavorite = db.ListingFavorite
     }
 
-    async create(listingFavorite: IListingFavorite): Promise<IListingFavorite> {
+    async create(listingFavorite: IListingFavoriteOptional): Promise<IListingFavorite> {
         try {
             const newListingFavorite = await this.ListingFavorite.create(listingFavorite)
             return newListingFavorite.dataValues
@@ -31,7 +32,7 @@ export class ListingFavoriteRepository implements IListingFavoriteRepository {
         }
     }
 
-    async update(updateVal: IListingFavorite, search: IListingFavorite): Promise<boolean> {
+    async update(updateVal: IListingFavoriteOptional, search: IListingFavoriteOptional): Promise<boolean> {
         try{
             const update = await this.ListingFavorite.update(updateVal, { where: search})
             if(update[0] == 0){
@@ -44,7 +45,7 @@ export class ListingFavoriteRepository implements IListingFavoriteRepository {
         }
     }
 
-    async delete(search: IListingFavorite): Promise<boolean> {
+    async delete(search: IListingFavoriteOptional): Promise<boolean> {
         try{
             await this.ListingFavorite.destroy({where:search})
             return true
@@ -65,7 +66,7 @@ export class ListingFavoriteRepository implements IListingFavoriteRepository {
         }
     }
 
-    async findByVal(search:IListingFavorite): Promise<IListingFavorite[]> {
+    async findByVal(search:IListingFavoriteOptional): Promise<IListingFavorite[]> {
         try{
             let listingFavorites = await this.ListingFavorite.findAll({where:search})
             if(listingFavorites){

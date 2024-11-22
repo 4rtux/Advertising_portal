@@ -1,23 +1,23 @@
 import { db } from '../models/index';
 
-
+export type IPromotionOptional = Partial<IPromotion>;
 export interface IPromotion {
-    id?: number;
-    listing_id?: number;
-    user_id?: number;
-    plan_id?: number;
-    paid?: boolean;
-    from?: Date;
-    to?: Date;
+    id: number;
+    listing_id: number;
+    user_id: number;
+    plan_id: number;
+    paid: boolean;
+    from: Date;
+    to: Date;
     status?: number;
 }
 
 export interface IPromotionRepository {
-    create(data: IPromotion): Promise<IPromotion>;
-    update(updateVal: IPromotion, search: IPromotion): Promise<boolean>;
-    delete(search: IPromotion): Promise<boolean>;
+    create(data: IPromotionOptional): Promise<IPromotion>;
+    update(updateVal: IPromotionOptional, search: IPromotionOptional): Promise<boolean>;
+    delete(search: IPromotionOptional): Promise<boolean>;
     findAll(): Promise<IPromotion[]>;
-    findByVal(val:IPromotion): Promise<IPromotion[]>; 
+    findByVal(val:IPromotionOptional): Promise<IPromotion[]>; 
 }
 
 export class PromotionRepository implements IPromotionRepository {
@@ -27,7 +27,7 @@ export class PromotionRepository implements IPromotionRepository {
         this.Promotion = db.Promotion
     }
 
-    async create(promotion: IPromotion): Promise<IPromotion> {
+    async create(promotion: IPromotionOptional): Promise<IPromotion> {
         try {
             const newPromotion = await this.Promotion.create(promotion)
             return newPromotion.dataValues
@@ -37,7 +37,7 @@ export class PromotionRepository implements IPromotionRepository {
         }
     }
 
-    async update(updateVal: IPromotion, search: IPromotion): Promise<boolean> {
+    async update(updateVal: IPromotionOptional, search: IPromotionOptional): Promise<boolean> {
         try{
             const update = await this.Promotion.update(updateVal, { where: search})
             if(update[0] == 0){
@@ -50,7 +50,7 @@ export class PromotionRepository implements IPromotionRepository {
         }
     }
 
-    async delete(search: IPromotion): Promise<boolean> {
+    async delete(search: IPromotionOptional): Promise<boolean> {
         try{
             await this.Promotion.destroy({where:search})
             return true
@@ -71,7 +71,7 @@ export class PromotionRepository implements IPromotionRepository {
         }
     }
 
-    async findByVal(search:IPromotion): Promise<IPromotion[]> {
+    async findByVal(search:IPromotionOptional): Promise<IPromotion[]> {
         try{
             let promotions = await this.Promotion.findAll({where:search})
             if(promotions){

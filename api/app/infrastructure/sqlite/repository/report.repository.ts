@@ -1,22 +1,24 @@
 import { db } from '../models/index';
 
+export type IReportOptional = Partial<IReport>;
 export interface IReport {
-    id?: number;
-    made_by?: number;
-    type?: string;
-    description?: string;
-    listing_id?: number;
-    culprit_id?: number;
-    resolved_by?: number;
-    status?: number;
+    id: number;
+    made_by: number;
+    type: string;
+    description: string;
+    proof: string;
+    listing_id: number;
+    culprit_id: number;
+    resolved_by: number;
+    status: number;
 }
 
 export interface IReportRepository {
-    create(data: IReport): Promise<IReport>;
-    update(updateVal: IReport, search: IReport): Promise<boolean>;
-    delete(search: IReport): Promise<boolean>;
+    create(data: IReportOptional): Promise<IReport>;
+    update(updateVal: IReportOptional, search: IReportOptional): Promise<boolean>;
+    delete(search: IReportOptional): Promise<boolean>;
     findAll(): Promise<IReport[]>;
-    findByVal(val:IReport): Promise<IReport[]>; 
+    findByVal(val:IReportOptional): Promise<IReport[]>; 
 }
 
 export class ReportRepository implements IReportRepository {
@@ -26,7 +28,7 @@ export class ReportRepository implements IReportRepository {
         this.Report = db.Report
     }
 
-    async create(report: IReport): Promise<IReport> {
+    async create(report: IReportOptional): Promise<IReport> {
         try {
             const newReport = await this.Report.create(report)
             return newReport.dataValues
@@ -36,7 +38,7 @@ export class ReportRepository implements IReportRepository {
         }
     }
 
-    async update(updateVal: IReport, search: IReport): Promise<boolean> {
+    async update(updateVal: IReportOptional, search: IReportOptional): Promise<boolean> {
         try{
             const update = await this.Report.update(updateVal, { where: search})
             if(update[0] == 0){
@@ -49,7 +51,7 @@ export class ReportRepository implements IReportRepository {
         }
     }
 
-    async delete(search: IReport): Promise<boolean> {
+    async delete(search: IReportOptional): Promise<boolean> {
         try{
             await this.Report.destroy({where:search})
             return true
@@ -70,7 +72,7 @@ export class ReportRepository implements IReportRepository {
         }
     }
 
-    async findByVal(search:IReport): Promise<IReport[]> {
+    async findByVal(search:IReportOptional): Promise<IReport[]> {
         try{
             let reports = await this.Report.findAll({where:search})
             if(reports){

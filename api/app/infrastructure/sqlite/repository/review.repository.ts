@@ -1,19 +1,20 @@
 import { db } from '../models/index';
 
+export type IReviewOptional = Partial<IReview>;
 export interface IReview {
-    id?: number;
-    user_id?: number;
-    reviewed_by?: number;
-    message?: string;
-    star?: number;
+    id: number;
+    user_id: number;
+    reviewed_by: number;
+    message: string;
+    star: number;
 }
 
 export interface IReviewRepository {
-    create(data: IReview): Promise<IReview>;
-    update(updateVal: IReview, search: IReview): Promise<boolean>;
-    delete(search: IReview): Promise<boolean>;
+    create(data: IReviewOptional): Promise<IReview>;
+    update(updateVal: IReviewOptional, search: IReviewOptional): Promise<boolean>;
+    delete(search: IReviewOptional): Promise<boolean>;
     findAll(): Promise<IReview[]>;
-    findByVal(val:IReview): Promise<IReview[]>; 
+    findByVal(val:IReviewOptional): Promise<IReview[]>; 
 }
 
 export class ReviewRepository implements IReviewRepository {
@@ -23,7 +24,7 @@ export class ReviewRepository implements IReviewRepository {
         this.Review = db.Review
     }
 
-    async create(review: IReview): Promise<IReview> {
+    async create(review: IReviewOptional): Promise<IReview> {
         try {
             const newReview = await this.Review.create(review)
             return newReview.dataValues
@@ -33,7 +34,7 @@ export class ReviewRepository implements IReviewRepository {
         }
     }
 
-    async update(updateVal: IReview, search: IReview): Promise<boolean> {
+    async update(updateVal: IReviewOptional, search: IReviewOptional): Promise<boolean> {
         try{
             const update = await this.Review.update(updateVal, { where: search})
             if(update[0] == 0){
@@ -46,7 +47,7 @@ export class ReviewRepository implements IReviewRepository {
         }
     }
 
-    async delete(search: IReview): Promise<boolean> {
+    async delete(search: IReviewOptional): Promise<boolean> {
         try{
             await this.Review.destroy({where:search})
             return true
@@ -67,7 +68,7 @@ export class ReviewRepository implements IReviewRepository {
         }
     }
 
-    async findByVal(search:IReview): Promise<IReview[]> {
+    async findByVal(search:IReviewOptional): Promise<IReview[]> {
         try{
             let reviews = await this.Review.findAll({where:search})
             if(reviews){

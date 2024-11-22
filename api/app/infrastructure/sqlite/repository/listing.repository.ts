@@ -2,21 +2,22 @@ import { db } from '../models/index';
 
 export type ProductType = 'new' | 'used' | 'refurbished';
 
+export type IListingOptional = Partial<IListing>;
 export interface IListing {
-    id?: number;
-    name?: string;
-    pictures?: string[];
-    type?: ProductType;
-    user_id?: number;
-    status?: number;
+    id: number;
+    name: string;
+    pictures: string[];
+    type: ProductType;
+    user_id: number;
+    status: number;
 }
 
 export interface IListingRepository {
-    create(data: IListing): Promise<IListing>;
-    update(updateVal: IListing, search: IListing): Promise<boolean>;
-    delete(search: IListing): Promise<boolean>;
+    create(data: IListingOptional): Promise<IListing>;
+    update(updateVal: IListingOptional, search: IListingOptional): Promise<boolean>;
+    delete(search: IListingOptional): Promise<boolean>;
     findAll(): Promise<IListing[]>;
-    findByVal(val:IListing): Promise<IListing[]>; 
+    findByVal(val:IListingOptional): Promise<IListing[]>; 
 }
 
 export class ListingRepository implements IListingRepository {
@@ -26,7 +27,7 @@ export class ListingRepository implements IListingRepository {
         this.Listing = db.Listing
     }
 
-    async create(listing: IListing): Promise<IListing> {
+    async create(listing: IListingOptional): Promise<IListing> {
         try {
             const newListing = await this.Listing.create(listing)
             return newListing.dataValues
@@ -36,7 +37,7 @@ export class ListingRepository implements IListingRepository {
         }
     }
 
-    async update(updateVal: IListing, search: IListing): Promise<boolean> {
+    async update(updateVal: IListingOptional, search: IListingOptional): Promise<boolean> {
         try{
             const update = await this.Listing.update(updateVal, { where: search})
             if(update[0] == 0){
@@ -49,7 +50,7 @@ export class ListingRepository implements IListingRepository {
         }
     }
 
-    async delete(search: IListing): Promise<boolean> {
+    async delete(search: IListingOptional): Promise<boolean> {
         try{
             await this.Listing.destroy({where:search})
             return true
@@ -70,7 +71,7 @@ export class ListingRepository implements IListingRepository {
         }
     }
 
-    async findByVal(search:IListing): Promise<IListing[]> {
+    async findByVal(search:IListingOptional): Promise<IListing[]> {
         try{
             let listings = await this.Listing.findAll({where:search})
             if(listings){
