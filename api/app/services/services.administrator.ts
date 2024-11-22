@@ -120,24 +120,6 @@ export default class AdministratorService {
     }
     
 
-    async createAdministratorToken(administrators:IAdministratorOptional[],administratorAgent:any): Promise<IMessge>{
-        try{
-            if(administrators.length == 0){
-                return {'status':false,data:{'message':'Invalid login details'}}
-            }
-            else if(administrators.length == 1){
-                const administrator =  administrators[0]
-                return {'status':true,'data':{token:"token","privileges": "sortPrivileges(administrator.privileges,token,true)"}}
-            }
-            else{
-                throw new Error("Administrator exists more than once")
-            }
-        }
-        catch(err:any){
-            throw new Error(err)
-        }
-    }
-
     async changePassword(data:any): Promise<IMessge>{
         try{
             let {confirm_password:confirmPassword,password,old_password:oldPassword} = data
@@ -148,7 +130,7 @@ export default class AdministratorService {
             if(password === confirmPassword){
                 const administrator = await this.repo.findByVal({id, password:oldPassword})
                 if(administrator.length === 1){
-                    const staff = administrator[0]
+                    const administrator0 = administrator[0]
                     const update  = await this.repo.update({password},{id})
                     if(update){
                         return {'status':true,data:{'message':'Password changed successfully'}}

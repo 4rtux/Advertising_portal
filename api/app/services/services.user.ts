@@ -131,24 +131,6 @@ export default class UserService {
     }
     
 
-    async createUserToken(users:IUserOptional[],userAgent:any): Promise<IMessge>{
-        try{
-            if(users.length == 0){
-                return {'status':false,data:{'message':'Invalid login details'}}
-            }
-            else if(users.length == 1){
-                const user =  users[0]
-                return {'status':true,'data':{token:"token","privileges": "sortPrivileges(user.privileges,token,true)"}}
-            }
-            else{
-                throw new Error("User exists more than once")
-            }
-        }
-        catch(err:any){
-            throw new Error(err)
-        }
-    }
-
     async changePassword(data:any): Promise<IMessge>{
         try{
             let {confirm_password:confirmPassword,password,old_password:oldPassword} = data
@@ -159,7 +141,7 @@ export default class UserService {
             if(password === confirmPassword){
                 const user = await this.repo.findByVal({id, password:oldPassword})
                 if(user.length === 1){
-                    const staff = user[0]
+                    const user0 = user[0]
                     const update  = await this.repo.update({password},{id})
                     if(update){
                         return {'status':true,data:{'message':'Password changed successfully'}}
