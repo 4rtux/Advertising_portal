@@ -6,9 +6,9 @@ import requestIp from 'request-ip';
 import Sequelize from 'sequelize';
 import busboyBodyParser  from 'busboy-body-parser';
 
-// import { db } from './app/infrastructure/sqlite/models/index';
+import { db } from './app/infrastructure/sqlite/models/index';
 
-// const Op = db.Sequelize.Op;
+const Op = db.Sequelize.Op;
 
 
 dotenv.config();
@@ -31,9 +31,9 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended:true}));
 
 
-// require("./app/routes/routes.main")(app)
-// require("./app/routes/routes.user")(app)
-// require("./app/routes/routes.admin")(app)
+require("./app/routes/routes.main")(app)
+require("./app/routes/routes.user")(app)
+require("./app/routes/routes.administrator")(app)
 
 // 404 Error Handler
 app.use((req, res, next) => {
