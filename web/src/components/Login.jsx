@@ -1,28 +1,29 @@
-
 import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Login = () => {
-  const [email, setEmail] = useState('');
+  const [userIdentifier, setUserIdentifier] = useState(''); // Can be username or email
   const [password, setPassword] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Logging in with:', { email, password });
-  
+
     try {
-      const response = await fetch('/v1/user/login', {
+      const response = await fetch('http://localhost:4000/v1/user/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ user: email, password }),
+        body: JSON.stringify({
+          user: userIdentifier, // Allow either username or email
+          password,
+        }),
       });
-  
+
       const data = await response.json();
-  
+
       if (response.ok) {
         console.log('Login successful:', data);
         alert('Login successful!');
-        // Redirect or save token to localStorage
+        // Save token or redirect
       } else {
         alert(data.data.message || 'Login failed');
       }
@@ -31,31 +32,30 @@ const Login = () => {
       alert('An error occurred during login.');
     }
   };
-  
 
   return (
     <div className="container mt-5">
       <h2>Login</h2>
       <form onSubmit={handleSubmit} className="p-3 border rounded">
         <div className="mb-3">
-          <label htmlFor="email" className="form-label">Email</label>
-          <input 
-            type="email" 
-            className="form-control" 
-            id="email" 
-            value={email} 
-            onChange={(e) => setEmail(e.target.value)} 
+          <label htmlFor="userIdentifier" className="form-label">Username or Email</label>
+          <input
+            type="text"
+            className="form-control"
+            id="userIdentifier"
+            value={userIdentifier}
+            onChange={(e) => setUserIdentifier(e.target.value)}
             required
           />
         </div>
         <div className="mb-3">
           <label htmlFor="password" className="form-label">Password</label>
-          <input 
-            type="password" 
-            className="form-control" 
-            id="password" 
-            value={password} 
-            onChange={(e) => setPassword(e.target.value)} 
+          <input
+            type="password"
+            className="form-control"
+            id="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             required
           />
         </div>
