@@ -46,44 +46,68 @@ db.Review = require("./Review")(con,Sequelize)
 db.User = require("./User")(con,Sequelize)
 
 // Define relationships
+// User to Listing relationships
+db.User.hasMany(db.Listing, { as: 'listings', foreignKey: 'user_id' });
+db.Listing.belongsTo(db.User, { as: 'owner', foreignKey: 'user_id' });
 
-db.User.hasMany(db.Listing,{as:'listings',foreignKey:'user_id'})
-db.Listing.belongsTo(db.User, {as:'user',foreignKey:'user_id'});
-db.User.hasMany(db.ListingFavorite,{as:'favorites',foreignKey:'user_id'})
-db.ListingFavorite.belongsTo(db.User, {as:'user',foreignKey:'user_id'});
-db.User.hasMany(db.ListingView,{as:'views',foreignKey:'user_id'})
-db.ListingView.belongsTo(db.User, {as:'user',foreignKey:'user_id'});
-db.User.hasMany(db.Category,{as:'categories',foreignKey:'added_by'})
-db.Category.belongsTo(db.User, {as:'author',foreignKey:'added_by'});
-db.Administrator.hasMany(db.Category,{as:'categories',foreignKey:'approved_by'})
-db.Category.belongsTo(db.Administrator, {as:'author',foreignKey:'added_by'});
-db.Category.belongsTo(db.Administrator, {as:'approved_by',foreignKey:'approved_by'});
+// User to ListingFavorite relationships
+db.User.hasMany(db.ListingFavorite, { as: 'favoriteListings', foreignKey: 'user_id' });
+db.ListingFavorite.belongsTo(db.User, { as: 'favoritedBy', foreignKey: 'user_id' });
 
-db.Listing.hasMany(db.ListingFavorite,{as:'favorites',foreignKey:'listing_id'})
-db.ListingFavorite.belongsTo(db.Listing, {as:'listing',foreignKey:'listing_id'});
-db.Listing.hasMany(db.ListingView,{as:'views',foreignKey:'listing_id'})
-db.ListingView.belongsTo(db.Listing, {as:'listing',foreignKey:'listing_id'});
+// User to ListingView relationships
+db.User.hasMany(db.ListingView, { as: 'viewedListings', foreignKey: 'user_id' });
+db.ListingView.belongsTo(db.User, { as: 'viewer', foreignKey: 'user_id' });
 
-db.Plan.hasMany(db.Promotion,{as:'promotions',foreignKey:'plan_id'})
-db.Promotion.belongsTo(db.Plan, {as:'plan',foreignKey:'plan_id'});
-db.User.hasMany(db.Promotion,{as:'promotions',foreignKey:'user_id'})
-db.Promotion.belongsTo(db.User, {as:'user',foreignKey:'user_id'});
-db.Listing.hasMany(db.Promotion,{as:'promotions',foreignKey:'listing_id'})
-db.Promotion.belongsTo(db.Listing, {as:'listing',foreignKey:'listing_id'});
+// User to Category relationships
+db.User.hasMany(db.Category, { as: 'addedCategories', foreignKey: 'added_by' });
+db.Category.belongsTo(db.User, { as: 'addedByUser', foreignKey: 'added_by' });
 
-db.User.hasMany(db.Report,{as:'authored_reports',foreignKey:'made_by'})
-db.Report.belongsTo(db.User, {as:'author',foreignKey:'made_by'});
-db.User.hasMany(db.Report,{as:'reports',foreignKey:'culprit_id'})
-db.Report.belongsTo(db.User, {as:'culprit',foreignKey:'culprit_id'});
-db.Administrator.hasMany(db.Report,{as:'resolved_reports',foreignKey:'resolved_by'})
-db.Report.belongsTo(db.Administrator, {as:'resolver',foreignKey:'resolved_by'});
-db.Listing.hasMany(db.Report,{as:'reports',foreignKey:'listing_id'})
-db.Report.belongsTo(db.Listing, {as:'listing',foreignKey:'listing_id'});
+// Administrator to Category relationships
+db.Administrator.hasMany(db.Category, { as: 'approvedCategories', foreignKey: 'approved_by' });
+db.Category.belongsTo(db.Administrator, { as: 'approvedByAdmin', foreignKey: 'approved_by' });
 
-db.User.hasMany(db.Review,{as:'reviews',foreignKey:'user_id'})
-db.Review.belongsTo(db.User, {as:'user',foreignKey:'user_id'});
-db.User.hasMany(db.Review,{as:'authored_reviews',foreignKey:'reviewer_id'})
-db.Review.belongsTo(db.User, {as:'reviewer',foreignKey:'reviewer_id'});
+// Listing to ListingFavorite relationships
+db.Listing.hasMany(db.ListingFavorite, { as: 'favorites', foreignKey: 'listing_id' });
+db.ListingFavorite.belongsTo(db.Listing, { as: 'favoritedListing', foreignKey: 'listing_id' });
+
+// Listing to ListingView relationships
+db.Listing.hasMany(db.ListingView, { as: 'views', foreignKey: 'listing_id' });
+db.ListingView.belongsTo(db.Listing, { as: 'viewedListing', foreignKey: 'listing_id' });
+
+// Plan to Promotion relationships
+db.Plan.hasMany(db.Promotion, { as: 'promotions', foreignKey: 'plan_id' });
+db.Promotion.belongsTo(db.Plan, { as: 'planDetails', foreignKey: 'plan_id' });
+
+// User to Promotion relationships
+db.User.hasMany(db.Promotion, { as: 'userPromotions', foreignKey: 'user_id' });
+db.Promotion.belongsTo(db.User, { as: 'promotionOwner', foreignKey: 'user_id' });
+
+// Listing to Promotion relationships
+db.Listing.hasMany(db.Promotion, { as: 'listingPromotions', foreignKey: 'listing_id' });
+db.Promotion.belongsTo(db.Listing, { as: 'promotedListing', foreignKey: 'listing_id' });
+
+// User to Report relationships
+db.User.hasMany(db.Report, { as: 'authoredReports', foreignKey: 'made_by' });
+db.Report.belongsTo(db.User, { as: 'reportAuthor', foreignKey: 'made_by' });
+
+db.User.hasMany(db.Report, { as: 'reportedIssues', foreignKey: 'culprit_id' });
+db.Report.belongsTo(db.User, { as: 'reportedUser', foreignKey: 'culprit_id' });
+
+// Administrator to Report relationships
+db.Administrator.hasMany(db.Report, { as: 'resolvedReports', foreignKey: 'resolved_by' });
+db.Report.belongsTo(db.Administrator, { as: 'reportResolver', foreignKey: 'resolved_by' });
+
+// Listing to Report relationships
+db.Listing.hasMany(db.Report, { as: 'relatedReports', foreignKey: 'listing_id' });
+db.Report.belongsTo(db.Listing, { as: 'reportedListing', foreignKey: 'listing_id' });
+
+// User to Review relationships
+db.User.hasMany(db.Review, { as: 'receivedReviews', foreignKey: 'user_id' });
+db.Review.belongsTo(db.User, { as: 'reviewedUser', foreignKey: 'user_id' });
+
+db.User.hasMany(db.Review, { as: 'authoredReviews', foreignKey: 'reviewer_id' });
+db.Review.belongsTo(db.User, { as: 'reviewAuthor', foreignKey: 'reviewer_id' });
+
 
 
 
