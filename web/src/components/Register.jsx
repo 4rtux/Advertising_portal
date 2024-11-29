@@ -8,15 +8,41 @@ const Register = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+  
     if (password !== confirmPassword) {
       alert('Passwords do not match!');
       return;
     }
-    console.log('Registering with:', { name, email, password });
-    // Add API call logic here
+  
+    try {
+      const response = await fetch('/v1/user/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          username: name,
+          email,
+          password,
+          confirm_password: confirmPassword,
+        }),
+      });
+  
+      const data = await response.json();
+  
+      if (response.ok) {
+        console.log('Registration successful:', data);
+        alert('Registration successful!');
+        // Redirect to login page or clear form
+      } else {
+        alert(data.data.message || 'Registration failed');
+      }
+    } catch (error) {
+      console.error('Error registering:', error);
+      alert('An error occurred during registration.');
+    }
   };
+  
 
   return (
     <div className="container mt-5">

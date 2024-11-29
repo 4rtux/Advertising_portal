@@ -16,6 +16,7 @@ package-lock.json
 
 # production
 /build
+database-dev.sqlite
 
 # misc
 .DS_Store

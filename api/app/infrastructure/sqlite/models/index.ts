@@ -53,11 +53,10 @@ db.User.hasMany(db.ListingFavorite,{as:'favorites',foreignKey:'user_id'})
 db.ListingFavorite.belongsTo(db.User, {as:'user',foreignKey:'user_id'});
 db.User.hasMany(db.ListingView,{as:'views',foreignKey:'user_id'})
 db.ListingView.belongsTo(db.User, {as:'user',foreignKey:'user_id'});
-db.User.hasMany(db.Category,{as:'categories',foreignKey:'added_by'})
-db.Category.belongsTo(db.User, {as:'author',foreignKey:'added_by'});
-db.Administrator.hasMany(db.Category,{as:'categories',foreignKey:'approved_by'})
-db.Category.belongsTo(db.Administrator, {as:'author',foreignKey:'added_by'});
-db.Category.belongsTo(db.Administrator, {as:'approved_by',foreignKey:'approved_by'});
+db.User.hasMany(db.Category, { as: 'categories', foreignKey: 'added_by' });
+db.Category.belongsTo(db.User, { as: 'addedByUser', foreignKey: 'added_by' });
+db.Administrator.hasMany(db.Category, { as: 'approvedCategories', foreignKey: 'approved_by' });
+db.Category.belongsTo(db.Administrator, { as: 'approvedByAdmin', foreignKey: 'approved_by' });
 
 db.Listing.hasMany(db.ListingFavorite,{as:'favorites',foreignKey:'listing_id'})
 db.ListingFavorite.belongsTo(db.Listing, {as:'listing',foreignKey:'listing_id'});
