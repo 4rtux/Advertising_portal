@@ -56,6 +56,12 @@ export const authentication = async (req: Request,res: Response)=>{
 }
 
 
+export const userProfile = async (req: Request,res: Response)=>{
+    const user = res.locals.user
+    res.json({status:true, user})
+}
+
+
 export const updateProfile = async (req: Request,res: Response)=>{
     const { id } = res.locals.user
     try{
@@ -79,4 +85,105 @@ export const changePassword = async (req: Request,res: Response)=>{
     catch(err:any){
         res.status(401).json({status:false,message:err.message})
     }
+}
+
+
+export const recentlyViewedListing = async (req: Request,res: Response)=>{
+    const { id } = res.locals.user
+    try{
+
+    }
+    catch(err:any){
+        res.status(401).json({status:false,message:err.message})
+    }  
+}
+
+export const favoritesListing = async (req: Request,res: Response)=>{
+    const { id } = res.locals.user
+    try{
+
+    }
+    catch(err:any){
+        res.status(401).json({status:false,message:err.message})
+    }  
+}
+
+export const viewedHistory = async (req: Request,res: Response)=>{
+    const { id } = res.locals.user
+    try{
+
+    }
+    catch(err:any){
+        res.status(401).json({status:false,message:err.message})
+    }  
+}
+
+export const userListings = async (req: Request,res: Response)=>{
+    const { id } = res.locals.user
+    try{
+
+    }
+    catch(err:any){
+        res.status(401).json({status:false,message:err.message})
+    }  
+}
+
+export const createListing = async (req: Request,res: Response)=>{
+    const { id } = res.locals.user
+    try{
+
+    }
+    catch(err:any){
+        res.status(401).json({status:false,message:err.message})
+    }  
+}
+
+export const editListing = async (req: Request,res: Response)=>{
+    const { id } = res.locals.user
+    try{
+
+    }
+    catch(err:any){
+        res.status(401).json({status:false,message:err.message})
+    }  
+}
+
+export const deleteListing = async (req: Request,res: Response)=>{
+    const { id } = res.locals.user
+    try{
+
+    }
+    catch(err:any){
+        res.status(401).json({status:false,message:err.message})
+    }  
+}
+
+export const promoteListing = async (req: Request,res: Response)=>{
+    const { id } = res.locals.user
+    try{
+
+    }
+    catch(err:any){
+        res.status(401).json({status:false,message:err.message})
+    }  
+}
+ 
+export const editPromotion = async (req: Request,res: Response)=>{
+    const { id } = res.locals.user
+    try{
+
+    }
+    catch(err:any){
+        res.status(401).json({status:false,message:err.message})
+    }  
+}
+
+export const listingPerformance = async (req: Request,res: Response)=>{
+    const { id } = res.locals.user
+    try{
+
+    }
+    catch(err:any){
+        res.status(401).json({status:false,message:err.message})
+    }  
 }

@@ -13,3 +13,41 @@ export const listings = async (req: Request,res: Response)=>{
         res.status(401).json({status:false,data:{message:"Error fetching listings"}})
     }
 }
+
+export const listingDetails = async (req: Request,res: Response)=>{
+    try{
+
+    }
+    catch(err:any){
+        res.status(401).json({status:false,message:err.message})
+    }  
+}
+
+
+export const searchListings = async (req: Request,res: Response)=>{
+    try{
+
+    }
+    catch(err:any){
+        res.status(401).json({status:false,message:err.message})
+    }  
+}
+
+
+export const promotedListings = async (req: Request,res: Response)=>{
+    try{
+
+    }
+    catch(err:any){
+        res.status(401).json({status:false,message:err.message})
+    }  
+}
+
+export const userListings = async (req: Request,res: Response)=>{
+    try{
+
+    }
+    catch(err:any){
+        res.status(401).json({status:false,message:err.message})
+    }  
+}
