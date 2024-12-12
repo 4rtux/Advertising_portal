@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { authUser } from "../middlewares/appMiddleware"
-import {authentication, login, register, updateProfile, resetPassword, changePassword} from  "../controllers/controller.user"
+import {authentication, login, register, updateProfile, resetPassword, changePassword, userProfile} from  "../controllers/controller.user"
+import * as user from  "../controllers/controller.user"
 
 module.exports = app =>{
     
@@ -11,11 +12,23 @@ module.exports = app =>{
     router.post("/register",register);
     router.post("/forget-password",resetPassword)
 
+    router.get("/listings/:userID",user.userListings);
+
     // http://localhost:4001/v1/user/authentication
 
     router.use(authUser)
     router.get("/authentication",authentication);
+    router.get("/recent-viewed",user.recentlyViewedListing);
+    router.get("/user-favorites", user.favoritesListing);
+    router.get("/user-viewed-history", user.viewedHistory);
+    router.get("/listing-performance/:listingID", user.listingPerformance);
+    router.post("/create-listing", user.createListing);
+    router.post("/edit-listing", user.editListing);
+    router.post("/edit-promotion", user.editPromotion);//pause, stop
+    router.post("/promote-listing", user.promoteListing);
+    router.delete("/delete-listing",user.deleteListing);
     
+    router.post("/profile",userProfile);
     router.post("/update-profile",updateProfile);
     router.post("/change-password",changePassword);
     
