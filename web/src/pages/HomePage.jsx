@@ -12,7 +12,8 @@ const HomePage = () => (
     <div className="container mt-4">
       <SearchBar />
       <Categories />
-      <FeaturedListings />
+      <FeaturedListings title="Featured Listings" />
+      <FeaturedListings title="Promoted Items" />
     </div>
     <Footer />
   </div>

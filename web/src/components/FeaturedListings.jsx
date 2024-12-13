@@ -1,15 +1,15 @@
 
 import React from 'react';
 
-const FeaturedListings = () => (
+const FeaturedListings = ({title}) => (
   <div className="row">
-    <h3 className="mb-4">Featured Listings</h3>
+    <h3 className="mb-4">{title}</h3>
     <div className="col-md-4">
       <div className="card">
         <img src="https://via.placeholder.com/150" className="card-img-top" alt="Listing" />
         <div className="card-body">
           <h5 className="card-title">Smartphone</h5>
-          <p className="card-text">$200</p>
+          <p className="card-text">$201</p>
         </div>
       </div>
     </div>
