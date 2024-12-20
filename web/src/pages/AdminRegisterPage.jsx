@@ -4,8 +4,10 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { setUser } from '../redux/slices/userSlice';
+import Navbar from '../components/Navbar';
+import AdminNavbar from '../components/AdminNavbar';
 
-const Register = () => {
+const AdminRegisterPage = () => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [username, setUsername] = useState('');
@@ -25,7 +27,7 @@ const Register = () => {
     }
 
     try {
-      const response = await fetch('http://localhost:4000/v1/user/register', {
+      const response = await fetch('http://localhost:4000/v1/administrator/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -44,10 +46,10 @@ const Register = () => {
       if (data.status) {
         alert('Registration successful!');
         Cookies.set('userToken', data.data.token, { expires: 7 });
-        Cookies.set('logged', "user", { expires: 7 });
+        Cookies.set('logged', "admin", { expires: 7 });
         // Dispatch user data to Redux
         dispatch(setUser(data.data.user));
-        navigate('/'); 
+        navigate('/admin/dashboard'); 
       } 
       else {
         alert(data.data.message || 'Registration failed');
@@ -60,8 +62,11 @@ const Register = () => {
   };
 
   return (
+    <>
+    
+    <AdminNavbar />
     <div className="container mt-5">
-      <h2>Register</h2>
+      <h2>Register as Admin</h2>
       <form onSubmit={handleSubmit} className="p-3 border rounded">
         <div className="mb-3">
           <label htmlFor="firstName" className="form-label">First Name</label>
@@ -143,8 +148,9 @@ const Register = () => {
         <button type="submit" className="btn btn-primary">Register</button>
       </form>
     </div>
+    </>
   );
 };
 
-export default Register;
+export default AdminRegisterPage;
 

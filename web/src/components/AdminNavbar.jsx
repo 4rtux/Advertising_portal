@@ -7,7 +7,7 @@ import { useDispatch } from 'react-redux';
 import { clearUser, setUser } from '../redux/slices/userSlice';
 import Cookies from 'js-cookie';
 
-const Navbar = () => {
+const AdminNavbar = () => {
   const token = Cookies.get('userToken');
   const logged = Cookies.get('logged');
 
@@ -17,7 +17,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   if(!user && token){
-    fetch('http://localhost:4000/v1/user/verify-token', {
+    fetch('http://localhost:4000/v1/administrator/verify-token', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -56,14 +56,22 @@ const Navbar = () => {
         <img src="/src/assets/logo.png" alt="Logo" height="40" />
       </Link>
       <div className="d-flex ms-auto">
-        {userData ? 
+        {userData ? (
+          <>
+          <div className={`dropdown ${show?'show':''}`}>
+            <button onClick={()=>toggleShow(!show)} className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Profile
+            </button>
             <div className={`dropdown-menu ${show?'show':''}`} aria-labelledby="dropdownMenuButton">
-              <Link to="/account/create-listing" className="dropdown-item">Create Listing</Link>
-              <Link to="/account/my-listings" className="dropdown-item">My Listings</Link>
-              <Link to="/account/profile" className="dropdown-item">Profile</Link>
-              <Link to="/account/favorites" className="dropdown-item">Favorites</Link>
+              <Link to="/admin/dashboard" className="dropdown-item">Dashboard</Link>
+              <Link to="/admin/profile" className="dropdown-item">profile</Link>
               <a className="dropdown-item" href="#" onClick={logoutUser} >Logout</a>
             </div>
+            
+          </div>
+          <h3 className="mx-5">{userData.username}</h3>
+          </>
+        )
         :
         <>
           <Link to="/register" className="btn btn-primary me-2">Register</Link>
@@ -75,4 +83,4 @@ const Navbar = () => {
   </nav>
 )};
 
-export default Navbar;
+export default AdminNavbar;

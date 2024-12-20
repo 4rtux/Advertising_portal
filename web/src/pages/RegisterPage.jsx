@@ -1,12 +1,16 @@
 
 import React from 'react';
 import Register from '../components/Register';
+import Navbar from '../components/Navbar';
 
 const RegisterPage = () => {
   return (
-    <div className="container mt-5">
-      <h2>Register</h2>
-      <Register />
+    <div>
+
+      <Navbar />
+      <div className="`container mt-5">
+        <Register />
+      </div>
     </div>
   );
 };

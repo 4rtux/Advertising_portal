@@ -1,7 +1,13 @@
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import Cookies from 'js-cookie';
+import { setUser } from '../redux/slices/userSlice';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Login = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [userIdentifier, setUserIdentifier] = useState(''); // Can be username or email
   const [password, setPassword] = useState('');
 
@@ -20,10 +26,14 @@ const Login = () => {
 
       const data = await response.json();
 
-      if (response.ok) {
-        console.log('Login successful:', data);
+      if (data.status) {
         alert('Login successful!');
-        // Save token or redirect
+        // Save token in cookies
+        Cookies.set('userToken', data.data.token, { expires: 7 });
+        Cookies.set('logged', "user", { expires: 7 });
+        // Dispatch user data to Redux
+        dispatch(setUser(data.data.user));
+        navigate('/'); 
       } else {
         alert(data.data.message || 'Login failed');
       }

@@ -1,16 +1,38 @@
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Navbar from '../components/Navbar';
-import SearchBar from '../components/SearchBar';
-import Categories from '../components/Categories';
 import FeaturedListings from '../components/FeaturedListings';
 import Footer from '../components/Footer';
-import SellerProfile from '../components/SellerProfile';
-import ProductItem from '../components/ProductItem';
 import { useParams } from 'react-router-dom';
+import Cookies from 'js-cookie';
+import SearchBar from '../components/SearchBar';
 
 const SearchResultPage = () => {
+  const token = Cookies.get('userToken');
+  const [listings, setListings] = useState([]);
   const { keyword } = useParams();
+  useEffect(() => {
+
+    fetch(`http://localhost:4000/v1/main/search-listings/${keyword}`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (!data.status) {
+          alert(data.data.message);
+          return;
+        }    
+        else{
+          setListings(data.data);
+          console.log({data})
+        }
+      });
+  },[keyword, token]);
   return (
   <div>
     <Navbar />
@@ -18,7 +40,7 @@ const SearchResultPage = () => {
       <div>
         <h3>Search Results for "{keyword}"</h3>
       </div>
-      <div>
+      {/* <div className="mb-5">
         <form>
           <div className='row'>
             <div className='col-md-4'>
@@ -45,7 +67,11 @@ const SearchResultPage = () => {
           </div>
           
         </form>
-      </div>
+      </div> */}
+
+      <SearchBar />
+
+      <FeaturedListings title="" data={listings} />
     </div>
     <Footer />
   </div>
