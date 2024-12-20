@@ -20,7 +20,7 @@ const Login = () => {
 
       const data = await response.json();
 
-      if (response.ok) {
+      if (data.status) {
         console.log('Login successful:', data);
         alert('Login successful!');
         // Save token or redirect
