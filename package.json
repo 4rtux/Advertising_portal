@@ -1,0 +1,12 @@
+{
+  "name": "advertising_portal",
+  "version": "1.0.0",
+  "description": "This is a software engineering project. The objective of this project is to develop an Advertising Portal, similar to OLX, where users can post and browse various products for sale. The platform will serve as a marketplace for users to connect with sellers, manage their listings, and facilitate product sales and purchases.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
