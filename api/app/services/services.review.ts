@@ -1,4 +1,4 @@
-import {IReviewRepository, ReviewRepository, IReview} from "../infrastructure/sqlite/repository/review.repository";
+import {IReviewRepository, ReviewRepository, IReview, IReviewOptional} from "../infrastructure/sqlite/repository/review.repository";
 import { TIMESTAMP, uploadFile } from "../utils/helpers";
 import Identity from '../utils/Identity';
 
@@ -69,7 +69,7 @@ export default class ReviewService {
         }
     }
 
-    async reviewsDetail(val:IReview): Promise<IReview[]>{
+    async reviewsDetail(val:IReviewOptional): Promise<IReview[]>{
         try{
             const reviews = await this.repo.findByVal(val)
             return reviews

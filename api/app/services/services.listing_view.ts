@@ -16,7 +16,7 @@ export default class ListingViewService {
     }
 
     
-    async createListingView(listingView: IListingView): Promise<IMessge>{
+    async createListingView(listingView: IListingViewOptional): Promise<IMessge>{
         try{
             const create = await this.repo.create(listingView)
             if(create){

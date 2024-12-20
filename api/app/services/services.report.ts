@@ -1,4 +1,4 @@
-import {IReportRepository, ReportRepository, IReport} from "../infrastructure/sqlite/repository/report.repository";
+import {IReportRepository, ReportRepository, IReport, IReportOptional} from "../infrastructure/sqlite/repository/report.repository";
 import { TIMESTAMP, uploadFile } from "../utils/helpers";
 import Identity from '../utils/Identity';
 
@@ -24,25 +24,25 @@ export default class ReportService {
     }
 
 
-    async createReport(report: IReportExtended): Promise<IMessge>{
+    async createReport(report: IReportOptional): Promise<IMessge>{
         try{
-            if(report.proof){
-                const id = new Identity()
-                const filename = id.generateID(4,"alpha")+TIMESTAMP
-                try{
-                    const uploadProof = uploadFile(filename,"reports/",report.proof)
-                    if(uploadProof.status){
-                        report.proof = uploadProof.filename
-                    }
-                    else{
-                        return {'status':false,data:{'message':'Failed to upload proof file'}}
-                    }
-                }
-                catch(err:any){
-                    console.log({err})
-                    return {'status':false,data:{'message':'Failed to upload proof file'}}
-                }
-            }
+            // if(report.proof){
+            //     const id = new Identity()
+            //     const filename = id.generateID(4,"alpha")+TIMESTAMP
+            //     try{
+            //         const uploadProof = uploadFile(filename,"reports/",report.proof)
+            //         if(uploadProof.status){
+            //             report.proof = uploadProof.filename
+            //         }
+            //         else{
+            //             return {'status':false,data:{'message':'Failed to upload proof file'}}
+            //         }
+            //     }
+            //     catch(err:any){
+            //         console.log({err})
+            //         return {'status':false,data:{'message':'Failed to upload proof file'}}
+            //     }
+            // }
 
             const create = await this.repo.create(report)
             if(create){

@@ -12,28 +12,20 @@ module.exports = (con,Sequelize) =>{
             required: true,
             comment: "id of the user that made the report"
         },
-        type:{
-            type:STRING,
-            required: true,
-            comment: "Type of the report eg listing or user"
-        },
         description:{
             type:TEXT,
             required: true,
             comment: "Description of the report ie reason for reporting"
         },
-        listing_id:{
-            type:INTEGER,
-            comment: "id of the listing being reported"
-        },
         culprit_id:{
             type:INTEGER,
+            required: true,
             comment: "id of the user being reported"
         },
         resolved_by:{
             type:INTEGER,
-            defaultValue:0,
-            required: true,
+            // defaultValue:0,
+            required: false,
             comment: "Id of the admin that resolved the report"
         },
         status:{

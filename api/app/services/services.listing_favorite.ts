@@ -16,7 +16,7 @@ export default class ListingFavoriteService {
     }
 
     
-    async createListingFavorite(listingFavorite: IListingFavorite): Promise<IMessge>{
+    async createListingFavorite(listingFavorite: IListingFavoriteOptional): Promise<IMessge>{
         try{
             const create = await this.repo.create(listingFavorite)
             if(create){
@@ -46,7 +46,7 @@ export default class ListingFavoriteService {
         }
     }
 
-    async listingFavoriteDetails(val:IListingFavorite): Promise<IListingFavorite>{
+    async listingFavoriteDetails(val:IListingFavoriteOptional): Promise<IListingFavorite>{
         try{
             const listingFavorites = await this.repo.findByVal(val)
             if (listingFavorites.length == 1) {

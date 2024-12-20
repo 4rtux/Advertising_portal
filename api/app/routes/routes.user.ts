@@ -18,6 +18,7 @@ module.exports = app =>{
 
     router.use(authUser)
     router.get("/authentication",authentication);
+    router.get("/verify-token",authentication);
     router.get("/recent-viewed",user.recentlyViewedListing);
     router.get("/user-favorites", user.favoritesListing);
     router.get("/user-viewed-history", user.viewedHistory);
@@ -26,7 +27,11 @@ module.exports = app =>{
     router.post("/edit-listing", user.editListing);
     router.post("/edit-promotion", user.editPromotion);//pause, stop
     router.post("/promote-listing", user.promoteListing);
-    router.delete("/delete-listing",user.deleteListing);
+    router.delete("/delete-listing/:listingID",user.deleteListing);
+    router.get("/listing/:listingID",user.listingDetails); 
+    router.get("/add-favorite/:listingID",user.addFavorite); 
+    router.post("/report", user.reportUser);
+    router.post("/review", user.reviewUser);
     
     router.post("/profile",userProfile);
     router.post("/update-profile",updateProfile);

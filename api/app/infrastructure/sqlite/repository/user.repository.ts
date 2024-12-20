@@ -7,6 +7,7 @@ export interface IUser {
     last_name: string;
     email: string;
     username: string;
+    location: string;
     phone: string;
     password: string;
     last_seen: Date;

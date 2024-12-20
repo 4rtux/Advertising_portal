@@ -5,6 +5,7 @@ import bodyParser from 'body-parser';
 import requestIp from 'request-ip';
 import Sequelize from 'sequelize';
 import busboyBodyParser  from 'busboy-body-parser';
+import path from 'path';
 
 import { db } from './app/infrastructure/sqlite/models/index';
 
@@ -17,6 +18,10 @@ const port = process.env.PORT || 4000
 const app = express()
 // Middleware to get client's IP address
 app.use(requestIp.mw());
+
+
+// Serve the 'uploads' folder as a static folder
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.use(cors({
     origin: ['http://localhost:3000'] // or an array of allowed origins

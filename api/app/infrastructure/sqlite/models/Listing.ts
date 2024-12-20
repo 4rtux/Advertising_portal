@@ -1,5 +1,5 @@
 module.exports = (con,Sequelize) =>{
-    const {STRING,INTEGER,JSON,ENUM} = Sequelize
+    const {STRING,INTEGER,JSON,ENUM,TEXT} = Sequelize
     const Listing = con.define("listing",{
         id: {
             type: INTEGER,
@@ -19,17 +19,29 @@ module.exports = (con,Sequelize) =>{
             type: ENUM('new', 'used', 'refurbished'),
             allowNull: false,
         },
+        price:{
+            type:STRING,
+            required: false
+        },
         user_id:{
             type:INTEGER,
             defaultValue:0,
             required: true,
             comment: "id of the user that added the listing"
         },
+        description:{
+            type:TEXT,
+            required: true
+        },
+        category_id:{
+            type:STRING,
+            required: true
+        },
         status:{
             type:INTEGER,
-            defaultValue:0,
+            defaultValue:1,
             required: true,
-            comment: "(-1:deleted,0:hidden,1:active,2:removed by admin)"
+            comment: "(-1:hidden,0:sold,1:active,2:removed by admin)"
         }
     }, {
         charset: 'latin1',

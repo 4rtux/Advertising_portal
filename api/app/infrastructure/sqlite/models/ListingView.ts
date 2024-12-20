@@ -14,7 +14,7 @@ module.exports = (con,Sequelize) =>{
         user_id:{
             type:INTEGER,
             required: true,
-            comment: "id of the user that viewed the listing"
+            comment: "id of the user that viewed the listing or 0 if not logged in"
         }
     }, {
         charset: 'latin1',

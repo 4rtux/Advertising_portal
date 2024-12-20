@@ -10,111 +10,105 @@ import UserService from "../services/services.user";
 dotenv.config();
 
 
-
-
-
-export const authAdministrator = (req: Request,res: Response, next: NextFunction) =>{
-    let auth = req.headers['x-authorization'];
-    auth = auth?.toString()
-
-    // Verify and extract the JWT token
-    const jwtToken = auth ? auth.split(' ')[1] : null;
-    
-    if(!jwtToken){
-        return res.status(401).json({status:false,data:{message:"You are not authorized to make this request, or visit this page"}})
-    }
-    else{       
-        jwt.verify(jwtToken,process.env.JWT_SECRET,async(err,decodedToken)=>{
-            if(err){
-                console.log({err});
-                return res.status(401).json({status:false,data:{message:"You are not authorized to make this request, or visit this page"}})
-            }
-            else{
-                const { userID, role } = decodedToken.auth;
-                if(role !== "administrator"){
-                    return res.status(401).json({status:false,data:{message:"You are not authorized to make this request, or visit this page"}})
-                }
-                try{
-                    const administratorService = new AdministratorService()
-                    const administrator = await administratorService.administratorDetails({id: userID})
-                    res.locals.administrator = administrator
-                    next()
-                }
-                catch(err:any){
-                    console.log({err})
-                    return res.status(401).json({status:false,data:{message:"You are not authorized to make this request, or visit this page"}})
-                }
-            }
-        })
-    }
-    
-}
-
-const validateDayToken = (dayToken:string) =>{
+const validateToken = (token:string) =>{
     try{
-        const decoded = jwt.verify(dayToken,process.env.JWT_SECRET)
-        const verifiedDayToken:any = verifyDayToken(decoded.dayToken)
-        if(verifiedDayToken.isNew){
-            verifiedDayToken.token = createToken("dayToken",{id:verifiedDayToken.id,timestamp:verifiedDayToken.timestamp})
-        }
-        return verifiedDayToken
+        const decoded = jwt.verify(token,process.env.JWT_SECRET)
+        return decoded.auth
     }
     catch(err){
         console.log({err})
-        const newDayToken:any = verifyDayToken(null)
-        newDayToken.token = createToken("dayToken",{id:newDayToken.id,timestamp:newDayToken.timestamp})
-        return newDayToken
+        return null
     }
 }
 
-export const authUser = (req: Request,res: Response, next: NextFunction) =>{
-    let auth = req.headers['x-authorization'];
-    auth = auth?.toString()
-    let dayToken = req.headers['day-token'];
-    dayToken = dayToken?.toString();
-    if(dayToken){
-        dayToken = validateDayToken(dayToken);
-        // console.log("validateDayToken", dayToken)
-    }
-    else{
-        // Generate a new day token
-        const newDayToken:any = verifyDayToken(null)
-        newDayToken.token = createToken("dayToken",{id:newDayToken.id,timestamp:newDayToken.timestamp})
-        dayToken = newDayToken
-        // console.log("newDayToken", dayToken)
-    }
 
-    // Verify and extract the JWT token
-    const jwtToken = auth ? auth.split(' ')[1] : null;
-    
-    if(!jwtToken){
-        return res.status(401).json({status:false,data:{message:"1. You are not authorized to make this request, or visit this page"}})
+
+export const authAdministrator = async (req: Request,res: Response, next: NextFunction) =>{
+    const authHeader = req.headers['authorization']; // Get the 'Authorization' header
+    if (!authHeader) return res.status(401).json({ message: 'Authorization header is missing' });
+
+    const token = authHeader.split(' ')[1]; // Extract token from "Bearer <token>"
+    if (!token) return res.status(401).json({ message: 'Token is missing' });
+    const validToken = validateToken(token);
+    if(!validToken){
+        return res.status(401).json({status:false,data:{message:"You are not authorized to make this request, or visit this page"}})
     }
-    else{       
-        jwt.verify(jwtToken,JWT_SECRET,async(err,decodedToken)=>{
-            if(err){
-                console.log({err});
-                console.log({jwtToken,JWT_SECRET})
-                return res.status(401).json({status:false,data:{message:"2. You are not authorized to make this request, or visit this page"}})
-            }
-            else{
-                const { userID, role } = decodedToken.auth;
-                if(role !== "user"){
-                    return res.status(401).json({status:false,data:{message:"3. You are not authorized to make this request, or visit this page"}})
-                }
-                try{
-                    const userService = new UserService()
-                    const user:any = await userService.userDetails({id: userID})
-                    user.dayToken = dayToken
-                    res.locals.user = user
-                    next() 
-                }
-                catch(err: any){
-                    console.log({err})
-                    return res.status(401).json({status:false,data:{message:"4. You are not authorized to make this request, or visit this page"}})
-                }
-            }
-        })
+    else{   
+        const { administratorID, role } = validToken;
+        if(role !== "administrator"){
+            return res.status(401).json({status:false,data:{message:"You are not authorized to make this request, or visit this page"}})
+        }
+        try{
+            const administratorService = new AdministratorService()
+            const administrator:any = await administratorService.administratorDetails({id: administratorID})
+            res.locals.administrator = administrator
+            next() 
+        }
+        catch(err: any){
+            console.log({err})
+            return res.status(401).json({status:false,data:{message:"You are not authorized to make this request, or visit this page"}})
+        }
+    }  
+    
+}
+
+
+export const getUser = async (req: Request,res: Response, next: NextFunction) =>{
+    const authHeader = req.headers['authorization']; // Get the 'Authorization' header
+    if (!authHeader) return res.status(401).json({ message: 'Authorization header is missing' });
+
+    const token = authHeader.split(' ')[1]; // Extract token from "Bearer <token>"
+    if (!token) return res.status(401).json({ message: 'Token is missing' });
+    const validToken = validateToken(token);
+    if(!validToken){
+        res.locals.user = null
+        next() 
+    }
+    else{   
+        const { userID, role } = validToken;
+        if(role !== "user"){
+            res.locals.user = null
+            next() 
+        }
+        try{
+            const userService = new UserService()
+            const user:any = await userService.userDetails({id: userID})
+            res.locals.user = user
+            next() 
+        }
+        catch(err: any){
+            res.locals.user = null
+            next() 
+        }
+    }    
+}
+
+
+export const authUser = async (req: Request,res: Response, next: NextFunction) =>{
+    const authHeader = req.headers['authorization']; // Get the 'Authorization' header
+    if (!authHeader) return res.status(401).json({ message: 'Authorization header is missing' });
+
+    const token = authHeader.split(' ')[1]; // Extract token from "Bearer <token>"
+    if (!token) return res.status(401).json({ message: 'Token is missing' });
+    const validToken = validateToken(token);
+    if(!validToken){
+        return res.status(401).json({status:false,data:{message:"You are not authorized to make this request, or visit this page"}})
+    }
+    else{   
+        const { userID, role } = validToken;
+        if(role !== "user"){
+            return res.status(401).json({status:false,data:{message:"You are not authorized to make this request, or visit this page"}})
+        }
+        try{
+            const userService = new UserService()
+            const user:any = await userService.userDetails({id: userID})
+            res.locals.user = user
+            next() 
+        }
+        catch(err: any){
+            console.log({err})
+            return res.status(401).json({status:false,data:{message:"You are not authorized to make this request, or visit this page"}})
+        }
     }    
 }
 

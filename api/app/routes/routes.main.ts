@@ -1,10 +1,12 @@
 import { Router } from "express";
 import * as main from  "../controllers/controller.main"
+import { getUser } from "../middlewares/appMiddleware";
 
 module.exports = app =>{
     
     const router = Router();
 
+    router.use(getUser)
     router.get("/listings",main.listings);
 
     router.get("/promoted-listings", main.promotedListings);
@@ -12,7 +14,7 @@ module.exports = app =>{
 
     router.get("/listing/:listingID",main.listingDetails); //also show more product from the seller and sma product with same category
     
-    
+     
     
     app.use("/v1/main/",router);
 }

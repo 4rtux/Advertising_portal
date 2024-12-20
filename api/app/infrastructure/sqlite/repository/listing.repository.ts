@@ -1,4 +1,5 @@
 import { db } from '../models/index';
+import { Op } from 'sequelize';
 
 export type ProductType = 'new' | 'used' | 'refurbished';
 
@@ -6,9 +7,12 @@ export type IListingOptional = Partial<IListing>;
 export interface IListing {
     id: number;
     name: string;
+    price: string;
     pictures: string[];
     type: ProductType;
     user_id: number;
+    description: string;
+    category_id: number;
     status: number;
 }
 
@@ -18,6 +22,7 @@ export interface IListingRepository {
     delete(search: IListingOptional): Promise<boolean>;
     findAll(): Promise<IListing[]>;
     findByVal(val:IListingOptional): Promise<IListing[]>; 
+    wildCardSearch(keyword:string, type:string, category:string): Promise<IListing[]>; 
 }
 
 export class ListingRepository implements IListingRepository {
@@ -54,6 +59,39 @@ export class ListingRepository implements IListingRepository {
         try{
             await this.Listing.destroy({where:search})
             return true
+        }
+        catch(err:any){
+            throw new Error(err)
+        }
+    }
+
+    async wildCardSearch(keyword:string, type:string, category:string): Promise<IListing[]> {
+        try{ 
+            // Build the query dynamically based on provided parameters
+            const searchQuery = {
+                where: {
+                    // Search keyword in `name` or `description`
+                    [Op.or]: [
+                        { name: { [Op.like]: `%${keyword}%` } },
+                        { description: { [Op.like]: `%${keyword}%` } },
+                    ],
+                },
+            };
+    
+            // // Add `type` filter if provided
+            // if (type) {
+            //     searchQuery.where.type = type;
+            // }
+    
+            // // Add `category` filter if provided
+            // if (category) {
+            //     searchQuery.where.category = category;
+            // }
+    
+            // Perform the query
+            const results = await this.Listing.findAll(searchQuery);
+    
+            return results;
         }
         catch(err:any){
             throw new Error(err)

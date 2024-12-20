@@ -46,7 +46,7 @@ export default class ListingService {
         }
     }
 
-    async listingDetails(val:IListing): Promise<IListing>{
+    async listingDetails(val:IListingOptional): Promise<IListing>{
         try{
             const listings = await this.repo.findByVal(val)
             if (listings.length == 1) {
@@ -76,10 +76,35 @@ export default class ListingService {
         }
     }
 
+    async listingsSearch(keyword:string, type:string, category:string): Promise<IListing[]>{
+        try{
+            const listings = await this.repo.wildCardSearch(keyword,type,category)
+            return listings
+        }
+        catch(err:any){
+            throw new Error(err)
+        }
+    }
+
     async listingList(): Promise<IListing[]>{
         try{
             const listings = await this.repo.findAll()
             return listings
+        }
+        catch(err:any){
+            throw new Error(err)
+        }
+    }
+
+    async deleteListing(val:IListingOptional): Promise<IMessge>{
+        try{
+            const deleteListing = await this.repo.delete(val)
+            if(deleteListing){
+                return {'status':true,data:{'message':'Listing deleted successfully'}}             
+            }
+            else{
+                return {'status':false,data:{'message':'Failed to delete Listing'}}
+            }
         }
         catch(err:any){
             throw new Error(err)

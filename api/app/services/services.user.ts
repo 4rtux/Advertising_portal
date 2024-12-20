@@ -133,7 +133,7 @@ export default class UserService {
 
     async changePassword(data:any): Promise<IMessge>{
         try{
-            let {confirm_password:confirmPassword,password,old_password:oldPassword} = data
+            let {confirmPassword, password,oldPassword } = data
             const id = data.id
             password = crypto.createHash('md5').update(password).digest('hex');
             confirmPassword = crypto.createHash('md5').update(confirmPassword).digest('hex');
@@ -208,6 +208,16 @@ export default class UserService {
             else{
                 throw new Error("User not found or user exists more than once")
             }
+        }
+        catch(err:any){
+            throw new Error(err)
+        }
+    }
+
+    async userList(): Promise<IUser[]>{
+        try{
+            const users = await this.repo.findAll()
+            return users
         }
         catch(err:any){
             throw new Error(err)

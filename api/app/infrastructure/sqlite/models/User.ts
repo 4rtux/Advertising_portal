@@ -26,6 +26,10 @@ module.exports = (con,Sequelize) =>{
             unique: true,
             required: true
         },
+        location:{
+            type:STRING,
+            required: false
+        },
         password:{
             type:STRING,
             required: true
