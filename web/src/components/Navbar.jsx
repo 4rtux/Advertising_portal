@@ -48,12 +48,24 @@ const Navbar = () => {
 
   } 
 
+  const companyNameStyle = {
+    fontFamily: 'Coolvetica, sans-serif',
+    fontSize: '2rem',
+    color: '#000',
+    marginLeft: '15px',
+  };
+
+  const logoStyle = {
+    marginBottom: '10px',
+  };
+
   console.log("logged: ",logged, userData)
   return (
   <nav className="navbar navbar-expand-lg navbar-light bg-light">
     <div className="container-fluid">
       <Link to="/" className="navbar-brand">
-        <img src="/src/assets/logo.png" alt="Logo" height="40" />
+        <img src="./src/assets/logo.png" alt="Logo" height="40" style={logoStyle}/>
+        <span style={companyNameStyle}>Comercify</span>
       </Link>
       <div className="d-flex ms-auto">
         {userData ? 

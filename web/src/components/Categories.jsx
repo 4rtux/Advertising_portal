@@ -7,7 +7,7 @@ const Categories = () => (
     <div className="col-md-3">
       <div className="card">
         <div className="card-body">
-          <img src="https://via.placeholder.com/80" alt="Category" className="mb-2" />
+          <img src="./src/assets/electronics.png" alt="Category" className="mb-2" />
           <h5 className="card-title">Electronics</h5>
         </div>
       </div>
@@ -15,7 +15,7 @@ const Categories = () => (
     <div className="col-md-3">
       <div className="card">
         <div className="card-body">
-          <img src="https://via.placeholder.com/80" alt="Category" className="mb-2" />
+          <img src="./src/assets/cars.png" alt="Category" className="mb-2" />
           <h5 className="card-title">Cars</h5>
         </div>
       </div>
@@ -23,7 +23,7 @@ const Categories = () => (
     <div className="col-md-3">
       <div className="card">
         <div className="card-body">
-          <img src="https://via.placeholder.com/80" alt="Category" className="mb-2" />
+          <img src="./src/assets/furnitures.png" alt="Category" className="mb-2" />
           <h5 className="card-title">Furniture</h5>
         </div>
       </div>
@@ -31,7 +31,7 @@ const Categories = () => (
     <div className="col-md-3">
       <div className="card">
         <div className="card-body">
-          <img src="https://via.placeholder.com/80" alt="Category" className="mb-2" />
+          <img src="./src/assets/jobs.png" alt="Category" className="mb-2" />
           <h5 className="card-title">Jobs</h5>
         </div>
       </div>
