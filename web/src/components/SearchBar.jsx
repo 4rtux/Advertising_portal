@@ -5,6 +5,10 @@ const SearchBar = () =>{
   const [search, setSearch] = useState('');
 
   const visitSearchPage = () => {
+    if(!search){
+      alert('Please enter a search query');
+      return;
+    }
     window.location.href = `/search/${search}`;
   }
 

@@ -4,8 +4,10 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { setUser } from '../redux/slices/userSlice';
+import Navbar from '../components/Navbar';
+import AdminNavbar from '../components/AdminNavbar';
 
-const Register = () => {
+const AdminRegisterPage = () => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [username, setUsername] = useState('');
@@ -13,70 +15,19 @@ const Register = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [phone, setPhone] = useState('');
-  const [errors, setErrors] = useState({});
-
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
-  const validateInput = () => {
-    const newErrors = {};
-
-    // Regex patterns
-    const nameRegex = /^[A-Za-z]+$/;
-    const usernameRegex = /^[A-Za-z0-9_]{3,15}$/;
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const phoneRegex = /^(?:([+]\d{1,4})[-.\s]?)?(?:[(](\d{1,3})[)][-.\s]?)?(\d{1,4})[-.\s]?(\d{1,4})[-.\s]?(\d{1,9})$/;
-    const passwordRegex = /^((?=\S*?[A-Z])(?=\S*?[a-z])(?=\S*?[0-9]).{6,})\S$/;
-
-    // First name
-    if (!nameRegex.test(firstName)) {
-      newErrors.firstName = 'First name must only contain letters.';
-    }
-
-    // Last name
-    if (!nameRegex.test(lastName)) {
-      newErrors.lastName = 'Last name must only contain letters.';
-    }
-
-    // Username
-    if (!usernameRegex.test(username)) {
-      newErrors.username = 'Username must be 3-15 characters long and contain only letters, numbers, and underscores.';
-    }
-
-    // Email
-    if (!emailRegex.test(email)) {
-      newErrors.email = 'Email must be a valid format (e.g., user@example.com).';
-    }
-
-    // Phone
-    if (!phoneRegex.test(phone)) {
-      newErrors.phone = 'Phone number may include a prefix (e.g., +123 123456789) and no more than 17 numbers long.';
-    }
-
-    // Password
-    if (!passwordRegex.test(password)) {
-      newErrors.password = 'Password must contain 1 number, 1 uppercase, 1 lowercase, and must be 8 characters or longer with no spaces.';
-    }
-
-    // Confirm password
-    if (password !== confirmPassword) {
-      newErrors.confirmPassword = 'Passwords do not match.';
-    }
-
-    setErrors(newErrors);
-
-    return Object.keys(newErrors).length === 0;
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!validateInput()) {
+    if (password !== confirmPassword) {
+      alert('Passwords do not match!');
       return;
     }
 
     try {
-      const response = await fetch('http://localhost:4000/v1/user/register', {
+      const response = await fetch('http://localhost:4000/v1/administrator/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -95,10 +46,10 @@ const Register = () => {
       if (data.status) {
         alert('Registration successful!');
         Cookies.set('userToken', data.data.token, { expires: 7 });
-        Cookies.set('logged', "user", { expires: 7 });
+        Cookies.set('logged', "admin", { expires: 7 });
         // Dispatch user data to Redux
         dispatch(setUser(data.data.user));
-        navigate('/'); 
+        navigate('/admin/dashboard'); 
       } 
       else {
         alert(data.data.message || 'Registration failed');
@@ -111,8 +62,11 @@ const Register = () => {
   };
 
   return (
+    <>
+    
+    <AdminNavbar />
     <div className="container mt-5">
-      <h2>Register</h2>
+      <h2>Register as Admin</h2>
       <form onSubmit={handleSubmit} className="p-3 border rounded">
         <div className="mb-3">
           <label htmlFor="firstName" className="form-label">First Name</label>
@@ -124,7 +78,6 @@ const Register = () => {
             onChange={(e) => setFirstName(e.target.value)}
             required
           />
-          {errors.firstName && <div className="text-danger">{errors.firstName}</div>}
         </div>
         <div className="mb-3">
           <label htmlFor="lastName" className="form-label">Last Name</label>
@@ -136,7 +89,6 @@ const Register = () => {
             onChange={(e) => setLastName(e.target.value)}
             required
           />
-          {errors.lastName && <div className="text-danger">{errors.lastName}</div>}
         </div>
         <div className="mb-3">
           <label htmlFor="username" className="form-label">Username</label>
@@ -148,7 +100,6 @@ const Register = () => {
             onChange={(e) => setUsername(e.target.value)}
             required
           />
-          {errors.username && <div className="text-danger">{errors.username}</div>}
         </div>
         <div className="mb-3">
           <label htmlFor="email" className="form-label">Email</label>
@@ -160,7 +111,6 @@ const Register = () => {
             onChange={(e) => setEmail(e.target.value)}
             required
           />
-          {errors.email && <div className="text-danger">{errors.email}</div>}
         </div>
         <div className="mb-3">
           <label htmlFor="phone" className="form-label">Phone Number</label>
@@ -172,7 +122,6 @@ const Register = () => {
             onChange={(e) => setPhone(e.target.value)}
             required
           />
-          {errors.phone && <div className="text-danger">{errors.phone}</div>}
         </div>
         <div className="mb-3">
           <label htmlFor="password" className="form-label">Password</label>
@@ -184,7 +133,6 @@ const Register = () => {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-          {errors.password && <div className="text-danger">{errors.password}</div>}
         </div>
         <div className="mb-3">
           <label htmlFor="confirmPassword" className="form-label">Confirm Password</label>
@@ -196,12 +144,13 @@ const Register = () => {
             onChange={(e) => setConfirmPassword(e.target.value)}
             required
           />
-          {errors.confirmPassword && <div className="text-danger">{errors.confirmPassword}</div>}
         </div>
         <button type="submit" className="btn btn-primary">Register</button>
       </form>
     </div>
+    </>
   );
 };
 
-export default Register;
+export default AdminRegisterPage;
+

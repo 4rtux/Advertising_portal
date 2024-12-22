@@ -1,50 +1,59 @@
 import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { useNavigate } from 'react-router-dom';
+import Cookies from 'js-cookie';
 
 const CreateListing = () => {
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [phone, setPhone] = useState('');
+  const [form, setForm] = useState({"name": "", "price":"", "category_id": "1", "type": "new", "description": ""});
+  const [selectedImages, setSelectedImages] = useState([]);
+  const navigate = useNavigate();
+
+  const handleFileChange = (event) => {
+    const files = Array.from(event.target.files); // Convert FileList to an array
+    setSelectedImages(files);
+  };
+
+  const handleFormChange = (event) => {
+    setForm({ ...form, [event.target.id]: event.target.value });
+  };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault();const formData = new FormData();
 
-    if (password !== confirmPassword) {
-      alert('Passwords do not match!');
-      return;
-    }
+    // Append additional data
+    const { name, category_id, price, type, description } = form;
+    formData.append('type', type);
+    formData.append('description', description);
+    formData.append('name', name);
+    formData.append('category_id', category_id);
+    formData.append('price', price);
+
+    // Append images
+    selectedImages.forEach((file, index) => {
+      formData.append(`photos`, file); // Use a key like "images[]" for multiple files
+    });
 
     try {
-      const response = await fetch('http://localhost:4000/v1/user/register', {
+      const response = await fetch('http://localhost:4000/v1/user/create-listing', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          first_name: firstName,
-          last_name: lastName,
-          username,
-          email,
-          phone,
-          password,
-          confirm_password: confirmPassword,
-        }),
+        body: formData,
+        headers: {
+          Authorization: `Bearer ${Cookies.get('userToken')}`,
+        },
       });
 
       const data = await response.json();
 
-      if (response.ok) {
-        console.log('Registration successful:', data);
-        alert('Registration successful!');
-        // Redirect to login page or clear form
+      if (data.status) {
+        alert(data.data.message);
+        navigate(`/account/view-listing/${data.data.listing.id}`); 
       } else {
-        alert(data.data.message || 'Registration failed');
+        alert(data.data.message || 'An error occurred while uploading the listing');
       }
-    } catch (error) {
-      console.error('Error registering:', error);
-      alert('An error occurred during registration.');
+    }
+    catch (error) {
+      alert('An error occurred while uploading the listing');
+      console.error('Error uploading listing:', error);
     }
   };
 
@@ -52,40 +61,90 @@ const CreateListing = () => {
     <div className="container mt-5">
       <h2>Create Listing</h2>
       <form onSubmit={handleSubmit} className="p-3 border rounded">
+        <div className="row">
+          <div className="mb-3 col-md-8">
+            <label htmlFor="name" className="form-label">Name</label>
+            <input
+              type="text"
+              className="form-control"
+              id="name"
+              value={form.name} 
+              onChange={handleFormChange}
+              required
+            />
+          </div>
+          <div className="mb-3 col-md-4">
+            <label htmlFor="price" className="form-label">Price</label>
+            <input
+              type="text"
+              className="form-control"
+              id="price"
+              value={form.price} 
+              onChange={handleFormChange}
+              required
+            />
+          </div>
+        </div>
         <div className="mb-3">
-          <label htmlFor="firstName" className="form-label">Name</label>
-          <input
+          <label htmlFor="description" className="form-label">Description</label>
+          <textarea
             type="text"
             className="form-control"
-            id="firstName"
-            value={firstName} 
-            onChange={(e) => setFirstName(e.target.value)}
+            id="description"
+            value={form.description}
+            onChange={handleFormChange}
             required
-          />
+          ></textarea>
         </div>
-        <div className="mb-3">
-          <label htmlFor="lastName" className="form-label">Category</label>
-          <input
-            type="text"
-            className="form-control"
-            id="lastName"
-            value={lastName}
-            onChange={(e) => setLastName(e.target.value)}
-            required
-          />
+        <div className="row">
+          <div className="mb-3 col-md-4">
+            <label htmlFor="category_id" className="form-label">Category</label>
+            <select className="form-control" 
+            onChange={handleFormChange}
+            id="category_id"
+            >
+              <option value="1">Phone</option>
+              <option value="2">Computer</option>
+            </select>
+          </div>
+          <div className="mb-3 col-md-4">
+            <label htmlFor="type" className="form-label">Listing Type</label>
+            <select className="form-control" 
+            onChange={handleFormChange}
+            id="type"
+            >
+              <option value="new">New</option>
+              <option value="used">Used</option>
+              <option value="refurbished">Refurbished</option>
+            </select>
+          </div>
+          <div className="mb-3 col-md-4">
+            <label htmlFor="photo" className="form-label">Image</label>
+            <input
+              type="file"
+              accept="image/*"
+              className='form-control'
+              multiple
+              onChange={handleFileChange}
+              required
+            />
+          </div>
+
+          <div className="row">
+            <h2>Selected Images:</h2>
+            {selectedImages.map((file, index) => (
+                <div key={index} className="col-md-3">
+                    <img
+                        src={URL.createObjectURL(file)}
+                        alt={`Preview ${index}`}
+                        style={{ width: 100, height: 100, objectFit: 'cover', margin: 5 }}
+                    />
+                    <p>{file.name}</p>
+                </div>
+            ))}
+          </div>
         </div>
-        <div className="mb-3">
-          <label htmlFor="username" className="form-label">Image</label>
-          <input
-            type="file"
-            className="form-control"
-            id="username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-          />
-        </div>
-        <button type="submit" className="btn btn-primary">Register</button>
+        <button type="submit" className="btn btn-primary">Post Listing</button>
       </form>
     </div>
   );

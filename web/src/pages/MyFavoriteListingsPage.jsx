@@ -5,14 +5,14 @@ import Cookies from 'js-cookie';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-const MyListingPage = () => {
+const MyFavoriteListingsPage = () => {
   const token = Cookies.get('userToken');
   const [myListings, setMyListings] = useState([]);
   let { user } = useSelector((state) => state.user);
-
   useEffect(() => {
+    console.log("Hello world 2")
     // fetch data from API
-    fetch(`http://localhost:4000/v1/user/listings/${user.id}`,
+    fetch(`http://localhost:4000/v1/user/user-favorites`,
     {
       method: 'GET',
       headers: {
@@ -31,7 +31,7 @@ const MyListingPage = () => {
       }
     });
     // setMyListings(data)
-  }, [token, user.id, user]);
+  }, []);
 
   const interpreteStatus = (status) => {
     switch(status){
@@ -46,18 +46,17 @@ const MyListingPage = () => {
     }
   }
   return (
-    <div>
-      <Navbar />
+    <div> <Navbar />
+      
       <div className="container mt-4">
         <div className='row'>
-          <h3>My listings</h3>
+          <h3>My Favorite Listings</h3>
               <table className="table table-bordered">
                 <thead>
                   <tr>
                     <th scope="col">Title</th>
                     <th scope="col">Type</th>
                     <th scope="col">Price</th>
-                    <th scope="col">Category</th>
                     <th scope="col">Status</th>
                     <th scope="col"></th>
                   </tr>
@@ -68,9 +67,8 @@ const MyListingPage = () => {
                       <td>{listing.name}</td>
                       <td>{listing.type}</td>
                       <td>{listing.price}</td>
-                      <td>{listing.category}</td>
                       <td><span className=''>{interpreteStatus(listing.status)}</span></td>
-                      <td><Link to={`/account/view-listing/${listing.id}`} className="btn btn-success"> View</Link> </td>
+                      <td><Link to={`/listing/${listing.id}`} className="btn btn-success"> View</Link> </td>
                     </tr>
                   ))}
                 </tbody>
@@ -82,4 +80,4 @@ const MyListingPage = () => {
   )
 };
 
-export default MyListingPage;
+export default MyFavoriteListingsPage;

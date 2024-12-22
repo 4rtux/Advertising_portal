@@ -10,7 +10,7 @@ import CreateListing from '../components/CreateListing';
 
 const CreateListingPage = () => (
   <div>
-    <AccountNavbar />
+    <Navbar />
     <CreateListing />
     <Footer />
   </div>
