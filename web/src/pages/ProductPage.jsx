@@ -34,7 +34,6 @@ const ProductPage = () => {
   const [sellerListing, setSellerListing] = useState([]);
   const [relatedListing, setRelatedListing] = useState([]);
   const [sellerProfile, setSellerProfile] = useState(null);
-  const [sellerReviews, setSellerReviews] = useState([]);
   const [views, setViews] = useState(0);
   const [favorites, setFavorites] = useState(0);
 
@@ -55,7 +54,6 @@ const ProductPage = () => {
           return;
         }    
         else{
-          console.log(data.data);
           setListing(data.data.listing);
           setSellerProfile(data.data.seller);
           setSellerListing(data.data.sellerListings);

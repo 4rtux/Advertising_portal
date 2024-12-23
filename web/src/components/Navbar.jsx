@@ -57,13 +57,21 @@ const Navbar = () => {
       </Link>
       <div className="d-flex ms-auto">
         {userData ? 
+          <>          
+          <div className={`dropdown ${show?'show':''}`}>
+            <button onClick={()=>toggleShow(!show)} className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Menu
+            </button>
             <div className={`dropdown-menu ${show?'show':''}`} aria-labelledby="dropdownMenuButton">
               <Link to="/account/create-listing" className="dropdown-item">Create Listing</Link>
               <Link to="/account/my-listings" className="dropdown-item">My Listings</Link>
               <Link to="/account/profile" className="dropdown-item">Profile</Link>
               <Link to="/account/favorites" className="dropdown-item">Favorites</Link>
               <a className="dropdown-item" href="#" onClick={logoutUser} >Logout</a>
-            </div>
+            </div>            
+          </div>
+          <h3 className="mx-5">{userData.username}</h3>
+          </>
         :
         <>
           <Link to="/register" className="btn btn-primary me-2">Register</Link>
