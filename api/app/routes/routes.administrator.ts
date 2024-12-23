@@ -17,7 +17,8 @@ module.exports = app =>{
     router.post("/update-profile",admin.updateProfile);
     router.post("/change-password",admin.changePassword);
     router.get("/user/:userID",admin.changePassword);
-    router.post("/restrict-user/:userID",admin.updateProfile);
+    router.get("/view-user/:userID",admin.userProfile);
+    router.post("/restrict-user",admin.restrictUser);
     router.post("/create-category",admin.createCategory);
     router.post("/edit-category/:id",admin.updateProfile);
     

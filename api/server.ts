@@ -11,7 +11,7 @@ import { db } from './app/infrastructure/sqlite/models/index';
 
 const Op = db.Sequelize.Op;
 
-
+ 
 dotenv.config();
 
 const port = process.env.PORT || 4000
@@ -24,7 +24,7 @@ app.use(requestIp.mw());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.use(cors({
-    origin: ['http://localhost:3000'] // or an array of allowed origins
+    origin: ['http://localhost:3000','http://localhost:3001'] // or an array of allowed origins
 }));
 // Use busboy-body-parser to handle multipart/form-data requests
 // app.use(busboyBodyParser({ limit: '50mb' }));

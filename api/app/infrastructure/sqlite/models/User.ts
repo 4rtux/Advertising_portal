@@ -46,7 +46,7 @@ module.exports = (con,Sequelize) =>{
             type:INTEGER,
             defaultValue:0,
             required: true,
-            comment: "(-1:restricted,0:new,1:active)"
+            comment: "(-1:restricted,0:cannot post ads,1:active)"
         }
     }, {
         charset: 'latin1',

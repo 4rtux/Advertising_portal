@@ -31,7 +31,7 @@ export default class ListingService {
         }
     }
 
-    async updateListing(listingID:number, listing: IListing): Promise<IMessge>{
+    async updateListing(listingID:number, listing: IListingOptional): Promise<IMessge>{
         try{
             const update = await this.repo.update(listing,{id:listingID})
             if(update){
