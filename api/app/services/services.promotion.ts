@@ -17,7 +17,7 @@ export default class PromotionService {
     }
 
     
-    async createPromotion(promotion: IPromotion): Promise<IMessge>{
+    async createPromotion(promotion: IPromotionOptional): Promise<IMessge>{
         try{
             const create = await this.repo.create(promotion)
             if(create){
@@ -47,14 +47,15 @@ export default class PromotionService {
         }
     }
 
-    async promotionDetails(val:IPromotion): Promise<IPromotion>{
+    async promotionDetails(val:IPromotionOptional): Promise<IPromotion | boolean>{
         try{
             const promotions = await this.repo.findByVal(val)
-            if (promotions.length == 1) {
-                return promotions[0]
+            if (promotions.length > 0) {
+                return promotions[promotions.length-1]
             }
             else{
-                throw new Error("Promotion not found or promotion exists more than once")
+                // throw new Error("Promotion not found or promotion exists more than once")
+                return false
             }
         }
         catch(err:any){

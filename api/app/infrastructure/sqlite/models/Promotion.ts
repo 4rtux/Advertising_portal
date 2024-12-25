@@ -23,11 +23,11 @@ module.exports = (con,Sequelize) =>{
             required: true
         },
         from:{
-            type:DATE,
+            type:STRING,
             required: true
         },
         to:{
-            type:DATE,
+            type:STRING,
             required: true
         },
         status:{

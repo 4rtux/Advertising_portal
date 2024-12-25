@@ -7,8 +7,8 @@ export interface IPromotion {
     user_id: number;
     plan_id: number;
     paid: boolean;
-    from: Date;
-    to: Date;
+    from: number;
+    to: number;
     status?: number;
 }
 

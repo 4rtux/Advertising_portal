@@ -18,6 +18,7 @@ import AdminLoginPage from './pages/AdminLoginPage';
 import AdminDashboardPage from './pages/AdminDashboardPage';
 import AdminProtectedRoute from './components/AdminProtectedRoute';
 import AdminProfilePage from './pages/AdminProfilePage';
+import AdminUserPage from './pages/AdminUserPage';
 
 
 
@@ -137,10 +138,10 @@ function onApprove(data) {
                     }
                 />
                 <Route
-                    path="/admin/users/:userID"
+                    path="/admin/user/:userID"
                     element={
                       <AdminProtectedRoute>
-                        <MyFavoriteListingsPage />
+                        <AdminUserPage />
                       </AdminProtectedRoute>
                     }
                 />

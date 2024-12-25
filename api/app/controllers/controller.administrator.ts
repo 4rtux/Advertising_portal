@@ -4,6 +4,10 @@ import { createToken, daysDifference, getNextDate } from "../utils/helpers";
 import AdministratorService from "../services/services.administrator";
 import UserService from '../services/services.user';
 import CategoryService from '../services/services.category';
+import ListingService from "../services/services.listing";
+import ListingViewService from "../services/services.listing_view";
+import ListingFavoriteService from "../services/services.listing_favorite";
+import ReviewService from "../services/services.review";
 
 const timezone = 'Europe/Oslo';
 export const login = async (req: Request,res: Response)=>{
@@ -82,6 +86,60 @@ export const createCategory = async (req: Request,res: Response)=>{
     }  
 }
 
+
+export const userProfile = async (req: Request,res: Response)=>{
+    try{
+        const { userID } = req.params
+        const listingService = new ListingService()
+        // Get 5 with same user_id
+        const userListings = await listingService.listingsDetail({user_id:Number(userID), status:1})
+        userListings.map((listing:any)=>{
+            listing.pictures.map((picture:any,index:number)=>{
+                listing.pictures[index] = `http://localhost:4000/uploads/listings/${picture}`
+            })
+        })
+        // Get reviews
+        const reviewService = new ReviewService()
+        const reviews = await reviewService.reviewsDetail({user_id:Number(userID)})
+        // console.log({reviews})
+        const myReviews:any = []
+        // Get the name of the reviewers
+        let totalRating = 0
+        for(let i = 0; i < reviews.length; i++){
+            const userService = new UserService()
+            const user = await userService.userDetails({id:reviews[i].user_id})
+            myReviews.push({...reviews[i],fullname:user.first_name+" "+user.last_name})
+            totalRating += reviews[i].star
+        }
+        totalRating = totalRating/reviews.length
+        
+        // Get user details
+        const userService = new UserService()
+        const user = await userService.userDetails({id:Number(userID)})
+        // if(user.picture){
+        //     user.picture = `http://localhost:4000/uploads/users/${user.picture}`
+        // }
+        user.password = ''
+
+        res.json({status:true,data:{sellerListings:userListings,user,reviews:myReviews, ratings: totalRating}})
+    }
+    catch(err:any){
+        console.log({err})
+        res.status(401).json({status:false,message:err.message})
+    }  
+}
+
+
+export const restrictUser = async (req: Request,res: Response)=>{
+    try{
+        const userService = new UserService()
+        const restrictResponse = await userService.updateUser(Number(req.body.userID),{status:req.body.status})
+        res.json(restrictResponse)
+    }
+    catch(err:any){
+        res.status(401).json({status:false,message:err.message})
+    }  
+}
 
 export const updateProfile = async (req: Request,res: Response)=>{
     const { id } = res.locals.user

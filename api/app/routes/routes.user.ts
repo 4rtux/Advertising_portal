@@ -15,7 +15,6 @@ module.exports = app =>{
     router.get("/listings/:userID",user.userListings);
 
     // http://localhost:4001/v1/user/authentication
-
     router.use(authUser)
     router.get("/authentication",authentication);
     router.get("/verify-token",authentication);
@@ -27,6 +26,7 @@ module.exports = app =>{
     router.post("/edit-listing", user.editListing);
     router.post("/edit-promotion", user.editPromotion);//pause, stop
     router.post("/promote-listing", user.promoteListing);
+    router.get("/sold-listing/:listingID", user.soldListing);
     router.delete("/delete-listing/:listingID",user.deleteListing);
     router.get("/listing/:listingID",user.listingDetails); 
     router.get("/add-favorite/:listingID",user.addFavorite); 

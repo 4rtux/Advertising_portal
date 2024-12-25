@@ -115,6 +115,9 @@ export default class UserService {
 
             if(users.length == 1){
                 const user =  users[0]
+                if(user.status == -1){
+                    return {'status':false,data:{'message':'User account is restricted'}}
+                }
                 const timestamp = Math.floor(moment().valueOf()/1000)
                 const id = new Identity()
                 const token = createToken("auth",{userID: user.id, role: "user"})
@@ -156,6 +159,21 @@ export default class UserService {
             }
             else{
                 return {'status':false,data:{'message':'Password mismatch'}}
+            }
+        }
+        catch(err:any){
+            throw new Error(err)
+        }
+    }
+
+    async updateUser(id:number,update:IUserOptional): Promise<IMessge>{
+        try{
+            const updateDone  = await this.repo.update(update,{id})
+            if(updateDone){
+                return {'status':true,data:{'message':'user updated successfully'}}
+            }
+            else{
+                return {'status':false,data:{'message':'Failed to update user'}}
             }
         }
         catch(err:any){

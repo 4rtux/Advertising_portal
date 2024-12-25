@@ -9,6 +9,7 @@ const SellerProfile = ({sellerProfile}) =>{
   const [rating, setRating] = React.useState(1);
   const [review, setReview] = React.useState('');
   const [report, setReport] = React.useState('');
+  console.log({sellerProfile})
 
   const submitReport = async (e) => {
     e.preventDefault();
@@ -20,7 +21,8 @@ const SellerProfile = ({sellerProfile}) =>{
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-          report,userID:sellerProfile.id
+          report,
+          userID:sellerProfile.user.id
         }),
       });
 
@@ -49,7 +51,7 @@ const SellerProfile = ({sellerProfile}) =>{
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-          star:rating, message:review,userID:sellerProfile.id
+          star:rating, message:review,userID:sellerProfile.user.id
         }),
       });
 
@@ -76,11 +78,19 @@ const SellerProfile = ({sellerProfile}) =>{
   return (  
   <div className="col-md-3">
     <h3>Seller Details</h3>
-    <h4>{sellerProfile.first_name} {sellerProfile.last_name}</h4>
+    {/* <h4>{sellerProfile.first_name} {sellerProfile.last_name}</h4>
     <h4>{sellerProfile.location}</h4>
     <h4>{sellerProfile.phone}</h4>
     <h4>{sellerProfile.email}</h4>
-    <h4>Rating: {sellerProfile.ratings}</h4>
+    <h4>Rating: {sellerProfile.ratings}</h4> */}
+
+
+    <h4>{sellerProfile.user.first_name} {sellerProfile.user.last_name}</h4>
+    <h4>{sellerProfile.user.location}</h4>
+    <h4>{sellerProfile.user.phone}</h4>
+    <h4>{sellerProfile.user.email}</h4>
+    <h4>{sellerProfile.user.location}</h4>
+    {/* <h4>Rating: {sellerProfile.user.ratings}</h4> */}
     <h4>Reviews</h4>
     {
       [...sellerProfile.reviews].map(review=>(

@@ -46,7 +46,7 @@ export default class CategoryService {
         }
     }
 
-    async categoryDetails(val:ICategory): Promise<ICategory>{
+    async categoryDetails(val:ICategoryOptional): Promise<ICategory>{
         try{
             const categorys = await this.repo.findByVal(val)
             if (categorys.length == 1) {

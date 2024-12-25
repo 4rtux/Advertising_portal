@@ -59,8 +59,8 @@ const AdminNavbar = () => {
         {userData ? (
           <>
           <div className={`dropdown ${show?'show':''}`}>
-            <button onClick={()=>toggleShow(!show)} className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Profile
+            <button onClick={()=>toggleShow(!show)} className="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Admin Account
             </button>
             <div className={`dropdown-menu ${show?'show':''}`} aria-labelledby="dropdownMenuButton">
               <Link to="/admin/dashboard" className="dropdown-item">Dashboard</Link>

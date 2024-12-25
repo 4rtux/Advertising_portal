@@ -71,6 +71,7 @@ export class ListingRepository implements IListingRepository {
             const searchQuery = {
                 where: {
                     // Search keyword in `name` or `description`
+                    status: 1,
                     [Op.or]: [
                         { name: { [Op.like]: `%${keyword}%` } },
                         { description: { [Op.like]: `%${keyword}%` } },
